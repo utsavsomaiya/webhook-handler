@@ -35,11 +35,11 @@ final class WebhookHandlerController extends Controller
             /**
              * @see https://docs.github.com/en/webhooks/webhook-events-and-payloads#example-webhook-delivery
              */
-            $headers['X-GitHub-Event'] ?? false => App::call(GithubWebhookService::class),
+            filled($headers['x-github-event'] ?? null) => App::call(GithubWebhookService::class),
             /**
              * @see http://github.com/laravel/cashier-stripe/blob/15.x/src/Http/Middleware/VerifyWebhookSignature.php#L26
              */
-            $headers['Stripe-Signature'] ?? false => App::call(StripeWebhookService::class),
+            filled($headers['stripe-signature'] ?? null) => App::call(StripeWebhookService::class),
             default => App::call(CustomWebhookService::class),
         };
     }

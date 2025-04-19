@@ -24,7 +24,7 @@ final class GithubWebhookService
 
         // TODO: Check if the webhook is valid: https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries#validating-webhook-deliveries
 
-        if ($this->headers['X-GitHub-Event'] === 'push') {
+        if ($this->headers['x-github-event'] === 'push') {
             $commits = collect($this->payload['commits'] ?? [])
                 ->map(fn (array $commit): array => [
                     'commit_id' => $commit['id'],

@@ -20,24 +20,9 @@ final class StripeWebhookService
         protected array $headers,
     ) {}
 
-    public function __invoke()
+    public function __invoke(): Response
     {
-        try {
-            WebhookSignature::verifyHeader(
-                json_encode($this->payload, JSON_PRETTY_PRINT),
-                $this->headers['Stripe-Signature'],
-                config('services.stripe.webhook.secret'),
-                config('services.stripe.webhook.tolerance')
-            );
-        } catch (SignatureVerificationException $exception) {
-            Log::error('Stripe webhook signature verification failed', [
-                'exception' => $exception,
-                'headers' => $this->headers,
-                'payload' => $this->payload,
-            ]);
-
-            throw new AccessDeniedHttpException($exception->getMessage(), $exception);
-        }
+        $this->verifyWebhookSignature();
 
         $createFailedOrSuccessTransaction = match ($this->payload['type']) {
             'payment_intent.succeeded' => function (): void {
@@ -60,5 +45,27 @@ final class StripeWebhookService
         $createFailedOrSuccessTransaction();
 
         return new Response('Stripe webhook received', HttpResponse::HTTP_OK);
+    }
+
+    private function verifyWebhookSignature(): void
+    {
+        try {
+            if (config('services.stripe.webhook.secret')) {
+                WebhookSignature::verifyHeader(
+                    json_encode($this->payload, JSON_PRETTY_PRINT),
+                    $this->headers['stripe-signature'],
+                    config('services.stripe.webhook.secret'),
+                    config('services.stripe.webhook.tolerance')
+                );
+            }
+        } catch (SignatureVerificationException $exception) {
+            Log::error('Stripe webhook signature verification failed', [
+                'exception' => $exception,
+                'headers' => $this->headers,
+                'payload' => $this->payload,
+            ]);
+
+            throw new AccessDeniedHttpException($exception->getMessage(), $exception);
+        }
     }
 }

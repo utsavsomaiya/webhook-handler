@@ -49,7 +49,21 @@ It's built to be easy to use and customizable, supporting multiple webhook sourc
 2. Configure the webhook URL in the service you want to handle webhooks from. The URL should point to your deployed application's webhook endpoint.
 
 ### Running Tests
-1. Run the test suite using PHPUnit:
+1. Make sure you copy the `.env.example` file to `.env.testing` and configure the environment variables for testing.
+    ```bash
+    cp .env.example .env.testing
+    ```
+
+2. Run the test suite using PHPUnit:
     ```bash
     php artisan test
     ```
+
+
+### Screenshots of the Working Environments
+#### When Tests Pass, We Party 🎉
+<details>
+    <summary>Here are some screenshots showcasing the passing test cases and the browser tabs open during development:</summary>
+    <img src="./public/screenshots/test-passing.png" alt="Test Pass" width="600">
+    <img src="./public/screenshots/browser-tabs.png" alt="Browser Tabs" width="600">
+</details>
