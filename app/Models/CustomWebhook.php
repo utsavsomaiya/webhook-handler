@@ -23,7 +23,7 @@ final class CustomWebhook extends Model
     protected function casts(): array
     {
         return [
-            'payload' => 'array',
+            'data' => 'array',
         ];
     }
 }

@@ -18,6 +18,7 @@ return new class() extends Migration
             $table->string('commit_id');
             $table->text('message');
             $table->string('author');
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }

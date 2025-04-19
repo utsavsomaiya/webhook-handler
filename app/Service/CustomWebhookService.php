@@ -17,7 +17,12 @@ final class CustomWebhookService
 
     public function __invoke(): Response
     {
-        CustomWebhook::query()->create(['payload' => $this->payload]);
+        CustomWebhook::query()->create([
+            'data' => [
+                'payload' => $this->payload,
+                'headers' => $this->headers,
+            ],
+        ]);
 
         return new Response('Custom webhook received', HttpResponse::HTTP_OK);
     }

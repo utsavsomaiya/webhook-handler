@@ -15,7 +15,7 @@ return new class() extends Migration
     {
         Schema::create('custom_webhooks', function (Blueprint $table): void {
             $table->id();
-            $table->json('payload');
+            $table->json('data');
             $table->timestamps();
         });
     }

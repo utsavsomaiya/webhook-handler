@@ -18,6 +18,7 @@ return new class() extends Migration
             $table->integer('amount');
             $table->string('currency');
             $table->string('status');
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }
