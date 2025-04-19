@@ -13,14 +13,11 @@ return new class() extends Migration
      */
     public function up(): void
     {
-        Schema::create('personal_access_tokens', function (Blueprint $table) {
+        Schema::create('github_commits', function (Blueprint $table): void {
             $table->id();
-            $table->morphs('tokenable');
-            $table->string('name');
-            $table->string('token', 64)->unique();
-            $table->text('abilities')->nullable();
-            $table->timestamp('last_used_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->string('commit_id');
+            $table->text('message');
+            $table->string('author');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class() extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('github_commits');
     }
 };

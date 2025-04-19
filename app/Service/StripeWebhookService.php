@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service;
+
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Log;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\WebhookSignature;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
+final class StripeWebhookService
+{
+    public function __construct(
+        protected array $payload,
+        protected array $headers,
+    ) {}
+
+    public function __invoke()
+    {
+        try {
+            WebhookSignature::verifyHeader(
+                request()->getContent(),
+                $this->headers['Stripe-Signature'],
+                config('services.stripe.webhook.secret'),
+                config('services.stripe.webhook.tolerance')
+            );
+        } catch (SignatureVerificationException $exception) {
+            Log::error('Stripe webhook signature verification failed', [
+                'exception' => $exception,
+                'headers' => $this->headers,
+                'payload' => $this->payload,
+            ]);
+
+            throw new AccessDeniedHttpException($exception->getMessage(), $exception);
+        }
+
+        $createFailedOrSuccessTransaction = match ($this->payload['type']) {
+            'payment_intent.succeeded' => function (): void {
+                //
+            },
+            default => fn () => Log::warning('Stripe webhook event is not supported', [
+                'headers' => $this->headers,
+                'payload' => $this->payload,
+            ]),
+        };
+
+        $createFailedOrSuccessTransaction();
+
+        return new Response('Stripe webhook received', HttpResponse::HTTP_OK);
+    }
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -35,4 +37,10 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'webhook' => [
+            'secret' => env('STRIPE_WEBHOOK_SECRET'),
+            'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
+        ],
+    ],
 ];
