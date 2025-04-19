@@ -67,3 +67,17 @@ It's built to be easy to use and customizable, supporting multiple webhook sourc
     <img src="./public/screenshots/test-passing.png" alt="Test Pass" width="600">
     <img src="./public/screenshots/browser-tabs.png" alt="Browser Tabs" width="600">
 </details>
+
+### Future plans
+```mermaid
+graph TD;
+    A[Webhook Handler] --> B[Add more webhook sources]
+    A --> C[Improve error handling]
+    C --> C1[Doing like the describe error code for listen it!]
+    A --> D[Implement authentication]
+    A --> E[Add more tests]
+    A --> F[Create a Docker image]
+    A --> G[Write documentation]
+    G --> G1[Use the Notion or Jira wiki]
+    A --> H[Create standalone microservice support for all the languages or SDKs]
+```
